@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import AppBar from "./AppBar";
 import Card from "./Card";
 import PurchaseFormModal from "./PurchaseFormModel";
 import PurchaseTable from "./PurchaseTable";
+import { useNavigate } from "react-router-dom";
+
 
 const Requisition = () => {
+  const navigate =useNavigate();
+
+  
   const handleAddItem = () => {
     console.log("Add Item Clicked");
     // Later this will open modal for purchase form
   };
+  const handleLogout = () => {
+    document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    navigate("/");
+  };
+  useEffect(() => {
+    const cookieArr = document.cookie.split("; ");
+    const userCookie = cookieArr.find((row) => row.startsWith("username="));
+    if (!userCookie) {
+      navigate("/"); // redirect to login if not logged in
+    }
+  }, [navigate]);
 
   const [showForm, setShowForm] = useState(false);
   const [formMode, setFormMode] = useState("add");
@@ -19,6 +35,7 @@ const Requisition = () => {
     setEditData(null);
     setShowForm(true);
   };
+  
 
   const [purchaseList, setPurchaseList] = useState([
     {
@@ -74,11 +91,9 @@ const Requisition = () => {
   };
 
   return (
-    <>
-      <div>
-        <AppBar />
-      </div>
-      <div className="p-4">
+    <div className="min-h-screen flex flex-col">
+      <AppBar />
+      <div className="flex-1 overflow-y-auto p-4">
         <Card onAdd={handleAddClick} />
         <PurchaseTable
           data={purchaseList}
@@ -93,8 +108,15 @@ const Requisition = () => {
           initialData={editData}
         />
       </div>
-    </>
+      <div className="flex justify-center ">
+      <button
+        onClick={handleLogout}
+        className=" w-32 h-10 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition"
+      >
+        Log Out
+      </button>
+      </div>
+    </div>
   );
 };
-
 export default Requisition;

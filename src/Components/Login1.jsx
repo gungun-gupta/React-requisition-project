@@ -1,129 +1,126 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.jpg";
 
-function Login1({ onLogin }) {
-  const [username, setusername] = useState("");
-  const [psswrd, setpsswrd] = useState("");
-  const [saveduser, setsaveduser] = useState("");
 
-  // check if a cookie exists---
+function Login1() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   useEffect(() => {
-    const cookieArr = document.cookie.split("; "); //get it and turn into an array format
-    const userCookie = cookieArr.find((row) => row.startsWith("username=")); //search for cookie with username
+    const cookieArr = document.cookie.split("; ");
+    const userCookie = cookieArr.find((row) => row.startsWith("username="));
     if (userCookie) {
-      const userValue = userCookie.split("=")[1]; //then again array it and gets usename at position 1
-      setsaveduser(decodeURIComponent(userValue)); //user was there before
+      setIsLoggedIn(true);
+      navigate("/requisition"); // optional: auto-redirect
     }
-  }, []);
+  }, [navigate]);
 
-  //for newusers
-  const handleLogin = (e) => {
-    e.preventDefault();
-
-    if (username && psswrd) {
-      document.cookie = `username=${encodeURIComponent(username)};
-      path=/; max-age=604800`; //remember for 7 days
-
-      setsaveduser(username);
-      setusername("");
-      setpsswrd("");
-    } else {
-      alert("please enter the credentials!!");
-    }
+  const handleLogin = (data) => {
+    document.cookie = `username=${encodeURIComponent(data.username)}; path=/; max-age=604800`;
+    setIsLoggedIn(true);
+    navigate("/requisition");
   };
-  const delcookie = () => {
-    //logout function
-    document.cookie = "username=; path=/; max-age=0"; //to delete the current user
-    setsaveduser("");
+
+  const handleLogout = () => {
+    // Expire the cookie
+    document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    setIsLoggedIn(false);
+    navigate("/"); // back to login
   };
-  if (saveduser) {
-    return (
-      <div>
-        <h2>Welcome, {saveduser}!</h2><br /><br />
-         <button onClick={delcookie}
-                type="logout"
-                className=" justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Log Out
-              </button>
-      </div>
-    );
-  }
+
   return (
-    <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            RG GROUP
-          </h2>
-        </div>
+    <div className="min-h-screen flex items-center border-2 justify-center border-indigo-600">
+      <div className="bg-white rounded-xl shadow-lg px-6 py-8 w-full max-w-sm">
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6" onSubmit={handleLogin}>
-            <div className="">
-              <label
-                htmlFor="username"
-                className=" text-sm/6 font-medium flex items-start text-gray-900"
-              >
+        <img src={logo} alt="RG Logo" className="h-16 w-auto mx-auto mb-4" />
+        
+        <h2 className="text-center text-2xl font-semibold text-black-600 mb-4">
+          Welcome to RG Group
+        </h2>
+
+        {isLoggedIn ? (
+          <div className="text-center space-y-4">
+            <p className="text-gray-700">You're already logged in.</p>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition"
+            >
+              Log Out
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
+            <div>
+              <label htmlFor="username" className="block text-sm text-black-600 mb-1">
                 Username:
               </label>
-              <div className="mt-2 ">
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={username}
-                  required
-                  autoComplete="username"
-                  onChange={(e) => setusername(e.target.value)}
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <input
+                id="username"
+                type="text"
+                className={`w-full px-3 py-2 border ${
+                  errors.username ? "border-red-500" : "border-gray-300"
+                } rounded-md focus:ring-indigo-400 focus:border-indigo-500 outline-none`}
+                {...register("username", { required: "Username is required" })}
+              />
+              {errors.username && (
+                <p className="text-xs text-red-500 mt-1">{errors.username.message}</p>
+              )}
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm/6 font-medium text-gray-900"
-                >
-                  Password
-                </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={psswrd}
-
-                  required
-                  autoComplete="current-password"
-                  onChange={(e) => setpsswrd(e.target.value)}
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <label htmlFor="password" className="block text-sm text-black-600 mb-1">
+                Password:
+              </label>
+              <input
+                id="password"
+                type="password"
+                className={`w-full px-3 py-2 border ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } rounded-md focus:ring-indigo-400 focus:border-indigo-500 outline-none`}
+                {...register("password", {
+                  required: "Password is required",
+                  pattern: {
+                    value:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message:
+                      "Must include upper, lower, number, special char, and 8+ characters",
+                  },
+                })}
+              />
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
+              )}
             </div>
 
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign in
-              </button>
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>Forgot password?</span>
+              <a href="#" className="text-indigo-500 hover:underline">Reset</a>
             </div>
+
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-500 transition"
+            >
+              Sign In
+            </button>
           </form>
-        </div>
+        )}
+
+        <p className="mt-5 text-center text-sm text-gray-500">
+          Don’t have an account?{" "}
+          <a href="#" className="text-indigo-600 hover:underline">Contact Admin</a>
+        </p>
       </div>
-    </>
+    </div>
   );
 }
+
 export default Login1;
