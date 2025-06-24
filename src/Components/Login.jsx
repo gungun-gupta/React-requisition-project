@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import LoginService from "../services/login.service";
 
-
 function Login() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,17 +27,18 @@ function Login() {
     // Simulate a successful login and set the cookie
     await LoginService.loginUser(data.username, data.password)
       .then((response) => {
-  setIsLoggedIn(true);
-    navigate("/requisition");
-      }) 
-      .catch((error) => {console.error("Login failed:", error);});
-   
-  
+        setIsLoggedIn(true);
+        navigate("/requisition");
+      })
+      .catch((error) => {
+        console.error("Login failed:", error);
+      });
   };
 
   const handleLogout = () => {
     // Expire the cookie
-    document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie =
+      "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     setIsLoggedIn(false);
     navigate("/"); // back to login
   };
@@ -46,9 +46,8 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center border-2 justify-center border-indigo-600">
       <div className="bg-white rounded-xl shadow-lg px-6 py-8 w-full max-w-sm">
-
         <img src={logo} alt="RG Logo" className="h-16 w-auto mx-auto mb-4" />
-        
+
         <h2 className="text-center text-2xl font-semibold text-black-600 mb-4">
           Welcome to RG Group
         </h2>
@@ -66,7 +65,10 @@ function Login() {
         ) : (
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
             <div>
-              <label htmlFor="username" className="block text-sm text-black-600 mb-1">
+              <label
+                htmlFor="username"
+                className="block text-sm text-black-600 mb-1"
+              >
                 Username:
               </label>
               <input
@@ -78,12 +80,17 @@ function Login() {
                 {...register("username", { required: "Username is required" })}
               />
               {errors.username && (
-                <p className="text-xs text-red-500 mt-1">{errors.username.message}</p>
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.username.message}
+                </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm text-black-600 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm text-black-600 mb-1"
+              >
                 Password:
               </label>
               <input
@@ -94,22 +101,20 @@ function Login() {
                 } rounded-md focus:ring-indigo-400 focus:border-indigo-500 outline-none`}
                 {...register("password", {
                   required: "Password is required",
-                  pattern: {
-                    value:
-                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                    message:
-                      "Must include upper, lower, number, special char, and 8+ characters",
-                  },
                 })}
               />
               {errors.password && (
-                <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
             <div className="flex justify-between text-xs text-gray-500">
               <span>Forgot password?</span>
-              <a href="#" className="text-indigo-500 hover:underline">Reset</a>
+              <a href="#" className="text-indigo-500 hover:underline">
+                Reset
+              </a>
             </div>
 
             <button
@@ -123,11 +128,13 @@ function Login() {
 
         <p className="mt-5 text-center text-sm text-gray-500">
           Don’t have an account?{" "}
-          <a href="#" className="text-indigo-600 hover:underline">Contact Admin</a>
+          <a href="#" className="text-indigo-600 hover:underline">
+            Contact Admin
+          </a>
         </p>
       </div>
     </div>
   );
 }
 
-export default Login1;
+export default Login;

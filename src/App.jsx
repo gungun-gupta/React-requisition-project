@@ -7,17 +7,22 @@ import Requisition from "./Components/Requisition";
 import SupplierMaster from "./Components/SupplierMaster";
 import Sidebar from "./Components/Sidebar";
 import Try from "./Components/Try";
+import LoginService from "./services/login.service";
 
 function App() {
-  return (
+  const user = LoginService.getUser();
+
+  return user ? (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Requisition />} />
         <Route path="/requisition" element={<Requisition />} />
         <Route path="/supplier" element={<SupplierMaster />} />
         <Route path="/try" element={<Try />} />
       </Routes>
     </BrowserRouter>
+  ) : (
+    <Login />
   );
 }
 function Layout() {

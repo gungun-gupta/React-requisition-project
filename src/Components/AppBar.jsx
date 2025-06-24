@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
+import LoginService from "../services/login.service";
 
 const AppBar = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const user = LoginService.getUser();
 
   return (
     <>
@@ -17,7 +19,7 @@ const AppBar = () => {
           <h1 className="text-xl font-semibold">Purchase Requisition</h1>
         </div>
         <div>
-          <span className="text-sm">Welcome, User</span>
+          <span className="text-sm">Welcome, {user}</span>
         </div>
       </header>
 

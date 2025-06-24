@@ -1,5 +1,6 @@
 import axios from "axios";
-const apiUrl = process.env.API_URL || "http://localhost:5000";
+import { get } from "react-hook-form";
+const apiUrl = import.meta.env.VITE_API_URL || "https://localhost:5000";
 
 const loginUser = async (username, password) => {
   try {
@@ -8,10 +9,14 @@ const loginUser = async (username, password) => {
     );
     const response = await axios.post(
       `${apiUrl}/User/token`,
-      JSON.parse(loginResponse.data)
+      loginResponse.data
     );
-                document.cookie = `token=${encodeURIComponent(response.data)}; path=/; max-age=604800`;
-                document.cookie = `user=${encodeURIComponent(username)}; path=/; max-age=604800`;
+    document.cookie = `token=${encodeURIComponent(
+      response.data
+    )}; path=/; max-age=604800`;
+    document.cookie = `user=${encodeURIComponent(
+      username
+    )}; path=/; max-age=604800`;
   } catch (error) {
     if (error.response) {
       // The request was made and the server responded with a status code
@@ -25,8 +30,21 @@ const loginUser = async (username, password) => {
     }
   }
 };
-
+const getUser = () => {
+  const userCookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("user="));
+  return userCookie ? decodeURIComponent(userCookie.split("=")[1]) : null;
+};
+const getToken = () => {
+  const tokenCookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("token="));
+  return tokenCookie ? decodeURIComponent(tokenCookie.split("=")[1]) : null;
+};
 const LoginService = {
   loginUser: loginUser,
+  getUser: getUser,
+  getToken: getToken,
 };
 export default LoginService;
