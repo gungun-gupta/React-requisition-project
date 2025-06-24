@@ -1,3 +1,8 @@
+import React, { useEffect, useState } from "react";
+// import SupplierForm from "./SupplierForm";
+import Try from "./Try";
+
+function SupplierMaster() {
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import * as XLSX from "xlsx";
