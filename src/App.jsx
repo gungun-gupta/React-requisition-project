@@ -6,7 +6,7 @@ import Login1 from "./Components/Login1";
 import Requisition from "./Components/Requisition";
 import SupplierMaster from "./Components/SupplierMaster";
 import Sidebar from "./Components/Sidebar";
-import Try from "./Components/Try";
+
 
 function App() {
   return (
@@ -15,7 +15,6 @@ function App() {
         <Route path="/" element={<Login1 />} />
         <Route path="/requisition" element={<Requisition />}/>
         <Route path="/supplier" element={<SupplierMaster/>}/>
-        <Route path="/try" element={<Try />}/>
         </Routes>
     </BrowserRouter>
     
