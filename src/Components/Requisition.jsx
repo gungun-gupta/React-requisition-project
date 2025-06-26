@@ -1,100 +1,104 @@
-import React, { useState,useEffect } from "react";
-import AppBar from "./AppBar";
+import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import PurchaseFormModal from "./PurchaseFormModel";
 import PurchaseTable from "./PurchaseTable";
 import { useNavigate } from "react-router-dom";
 
-
 const Requisition = () => {
-  const navigate =useNavigate();
+  const navigate = useNavigate();
 
-  
-  const handleAddItem = () => {
-    console.log("Add Item Clicked");
-    // Later this will open modal for purchase form
-  };
-  const handleLogout = () => {
-    document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    navigate("/");
-  };
+  // ✅ Login check using correct cookie name (user)
   useEffect(() => {
     const cookieArr = document.cookie.split("; ");
-    const userCookie = cookieArr.find((row) => row.startsWith("username="));
+    const userCookie = cookieArr.find((row) => row.startsWith("user="));
     if (!userCookie) {
       navigate("/"); // redirect to login if not logged in
     }
   }, [navigate]);
 
-  const [showForm, setShowForm] = useState(false);
   const [formMode, setFormMode] = useState("add");
+  const [showForm, setShowForm] = useState(false);
   const [editData, setEditData] = useState(null);
 
+  const [purchaseList, setPurchaseList] = useState([
+    {
+      Sno: 1,
+      RequisitionNo: "REQ-1001",
+      Document_Type: "Request",
+      Document_subtype: "Material",
+      CreatedBy: "Gungun",
+      CreatedOn: "2023-09-30",
+      MaterialCode: "MAT123",
+      Description: "Steel Rod",
+      Unit: "KG",
+      Quantity: "50",
+      DeliveryDate: "2025-06-26",
+    },
+  ]);
+
+  // 🔁 Keep full list for filtering
+  const [allPurchases, setAllPurchases] = useState(purchaseList);
+
+  // Add button
   const handleAddClick = () => {
     setFormMode("add");
     setEditData(null);
     setShowForm(true);
   };
-  
 
-  const [purchaseList, setPurchaseList] = useState([
-    {
-      Sno: "1",
-      DocumentNo: "doc-101",
-      Module: "Inventory",
-      Document_Type: "PR",
-      Document_subtype: "RawMaterial",
-      DocumentDate: "2025-03-27",
-      PostingDate: "2025-03-27",
-      CreatedBy: "Gungun",
-      Plant: 101,
-      Company: 1,
-    },
-    {
-      Sno: "2",
-      DocumentNo: "doc-102",
-      Module: "Inventory",
-      Document_Type: "PR",
-      Document_subtype: "RawMaterial",
-      DocumentDate: "2025-03-27",
-      PostingDate: "2025-03-27",
-      CreatedBy: "Sita",
-      Plant: 101,
-      Company: 1,
-    },
-  ]);
+  // Edit
+  const handleEdit = (item) => {
+    setFormMode("edit");
+    setEditData(item);
+    setShowForm(true);
+  };
 
-  const handleSave = (newData) => {
+  // Save/Add or Edit item(s)
+  const handleSave = (newItems) => {
     if (formMode === "add") {
-      setPurchaseList([...purchaseList, { ...newData, Sno: Date.now() }]);
-    } else if (formMode === "edit") {
-      setPurchaseList((prev) =>
-        prev.map((item) => (item.Sno === newData.Sno ? newData : item))
+      const newWithSno = newItems.map((item, index) => ({
+        ...item,
+        Sno: Date.now() + index, // unique Sno
+      }));
+      setPurchaseList((prev) => [...prev, ...newWithSno]);
+      setAllPurchases((prev) => [...prev, ...newWithSno]); // update master list
+    } else if (formMode === "edit" && newItems.length === 1) {
+      const updatedItem = newItems[0];
+      const updatedList = purchaseList.map((item) =>
+        item.Sno === updatedItem.Sno ? updatedItem : item
       );
+      setPurchaseList(updatedList);
+      setAllPurchases(updatedList); // update master list
     }
     setShowForm(false);
   };
 
-  const handleEdit = (rowData) => {
-    setFormMode("edit");
-    setEditData(rowData);
-    setShowForm(true);
+  // Delete
+  const handleDelete = (sno) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      const filtered = purchaseList.filter(
+        (item) => String(item.Sno) !== String(sno)
+      );
+      setPurchaseList(filtered);
+      setAllPurchases(filtered); // update master list
+    }
   };
 
-  const handleDelete = (sno) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this item?"
-    );
-    if (confirm) {
-      setPurchaseList(purchaseList.filter((item) => item.Sno !== sno));
-    }
+  // Filter
+  const handleFilter = (fromDate, toDate) => {
+    const filtered = allPurchases.filter((item) => {
+      const itemDate = new Date(item.CreatedOn);
+      const from = fromDate ? new Date(fromDate) : null;
+      const to = toDate ? new Date(toDate) : null;
+      return (!from || itemDate >= from) && (!to || itemDate <= to);
+    });
+    setPurchaseList(filtered);
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-      <AppBar />
       <div className="flex-1 overflow-y-auto p-4">
-        <Card onAdd={handleAddClick} />
+        <Card onAdd={handleAddClick} onFilter={handleFilter} />
         <PurchaseTable
           data={purchaseList}
           onEdit={handleEdit}
@@ -108,15 +112,8 @@ const Requisition = () => {
           initialData={editData}
         />
       </div>
-      <div className="flex justify-center ">
-      <button
-        onClick={handleLogout}
-        className=" w-32 h-10 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition"
-      >
-        Log Out
-      </button>
-      </div>
     </div>
   );
 };
+
 export default Requisition;

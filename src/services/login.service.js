@@ -42,9 +42,16 @@ const getToken = () => {
     .find((row) => row.startsWith("token="));
   return tokenCookie ? decodeURIComponent(tokenCookie.split("=")[1]) : null;
 };
+const logoutUser = () => {
+  document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;" ;
+  document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;" ;
+    location.reload();
+
+  }
 const LoginService = {
   loginUser: loginUser,
   getUser: getUser,
   getToken: getToken,
+  logoutUser: logoutUser,
 };
 export default LoginService;

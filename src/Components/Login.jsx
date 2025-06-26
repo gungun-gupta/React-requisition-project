@@ -16,7 +16,7 @@ function Login() {
 
   useEffect(() => {
     const cookieArr = document.cookie.split("; ");
-    const userCookie = cookieArr.find((row) => row.startsWith("username="));
+    const userCookie = cookieArr.find((row) => row.startsWith("user="));
     if (userCookie) {
       setIsLoggedIn(true);
       navigate("/requisition"); // optional: auto-redirect

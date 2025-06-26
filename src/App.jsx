@@ -5,37 +5,36 @@ import "./App.css";
 import Login from "./Components/Login";
 import Requisition from "./Components/Requisition";
 import SupplierMaster from "./Components/SupplierMaster";
-import Sidebar from "./Components/Sidebar";
-import Try from "./Components/Try";
 import LoginService from "./services/login.service";
+import MainLayout from "./Components/MainLayout";
 
 function App() {
   const user = LoginService.getUser();
 
-  return user ? (
+  return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Requisition />} />
-        <Route path="/requisition" element={<Requisition />} />
-        <Route path="/supplier" element={<SupplierMaster />} />
-        <Route path="/try" element={<Try />} />
+        <Route path="/" element={<Login />} />
+
+        {/* Protected Layout with Sidebar + AppBar */}
+        <Route element={<MainLayout />}>
+          <Route path="/requisition" element={<Requisition />} />
+          <Route path="/supplier" element={<SupplierMaster />} />
+        </Route>
       </Routes>
     </BrowserRouter>
-  ) : (
-    <Login />
   );
 }
-function Layout() {
-  return (
-    <>
-      <Sidebar isOpen={true} onClose={() => {}} />
-      <div className="ml-64 p-4">
-        <Outlet />
-      </div>
-    </>
-  );
-}
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+
+// function Layout() {
+//   return (
+//     <>
+//       <Sidebar isOpen={true} onClose={() => {}} />
+//       <div className="ml-64 p-4">
+//         <Outlet />
+//       </div>
+//     </>
+//   );
+// }
 
 export default App;

@@ -1,84 +1,157 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  HiOutlineCog,
+  HiOutlineDocumentText,
+  HiOutlineCube,
+  HiOutlineBuildingStorefront,
+  HiOutlineClipboardDocument,
+  HiOutlineHome,
+} from "react-icons/hi2";
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
+import { NavLink, useNavigate } from "react-router-dom";
+import LoginService from "../services/login.service";
 
-const Sidebar = ({ isOpen, onClose }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-   const navigate= useNavigate();
+const Sidebar = ({ isOpen }) => {
+  const [showProcurement, setShowProcurement] = useState(false);
+  const [showMasters, setShowMasters] = useState(false);
+  const navigate = useNavigate();
 
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
+  const handleLogout = () => {
+    LoginService.logoutUser();
+    navigate("/");
   };
+
+  const linkStyle =
+    "flex items-center gap-2 hover:text-white cursor-pointer transition";
+  const activeLink = "text-white font-semibold";
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white transform ${
+      className={`fixed top-14 left-0 h-[calc(100%-3.5rem)] w-56 bg-gray-900 text-gray-200 shadow-lg transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } transition-transform duration-300 z-50`}
+      } transition-transform duration-300 z-40`}
     >
-      <div className="p-4 text-lg font-semibold">Menu</div>
-      <ul className="p-4 space-y-2">
-        <li className="hover:bg-gray-700 p-2 rounded cursor-pointer">
-          Dashboard
-        </li>
+      <ul className="divide-y divide-gray-800 text-sm font-medium h-full flex flex-col justify-between">
+        <div>
+          {/* Dashboard */}
+          <li className="px-4 py-3 hover:bg-gray-800">
+            <NavLink to="/dashboard" className={({ isActive }) =>
+              `${linkStyle} ${isActive ? activeLink : "text-gray-400"}`
+            }>
+              <HiOutlineHome className="text-lg" />
+              <span>Dashboard</span>
+            </NavLink>
+          </li>
 
-        <li className="hover:bg-gray-700 p-2 rounded cursor-pointer">
-          Requisitions
-        </li>
-
-        <li>
-          <div
-            onClick={toggleDropdown}
-            className="flex items-center justify-between hover:bg-gray-700 p-2 rounded cursor-pointer"
-          >
-            Masters
-            <svg
-              className="w-2.5 h-2.5 ml-2"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
+          {/* Masters Dropdown */}
+          <li>
+            <div
+              className="flex items-center justify-between px-4 py-3 hover:bg-gray-800 cursor-pointer"
+              onClick={() => setShowMasters(!showMasters)}
             >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 4 4 4-4"
-              />
-            </svg>
-          </div>
+              <div className="flex items-center gap-3">
+                <HiOutlineClipboardDocument className="text-lg" />
+                <span>Masters</span>
+              </div>
+              {showMasters ? <LuChevronUp /> : <LuChevronDown />}
+            </div>
 
-          {isDropdownOpen && (
-            <div className="bg-gray-700 mt-1 rounded shadow-sm">
-              <ul className="py-2 text-sm text-white">
-                <li className="px-4 py-2 hover:bg-gray-600 cursor-pointer" onClick={()=>navigate("/supplier")}>
-                  Supplier 
+            {showMasters && (
+              <ul className="pl-10 pr-4 pb-2 pt-1 space-y-2 text-sm text-gray-400">
+                <li>
+                  <NavLink
+                    to="/supplier"
+                    className={({ isActive }) =>
+                      `${linkStyle} ${isActive ? activeLink : ""}`
+                    }
+                  >
+                    <HiOutlineDocumentText className="text-base" />
+                    <span>Supplier</span>
+                  </NavLink>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-600 cursor-pointer">
-                  Customer
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-600 cursor-pointer">
-                  Item Master
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-600 cursor-pointer">
-                  Config
+                <li>
+                  <NavLink
+                    to="/customer"
+                    className={({ isActive }) =>
+                      `${linkStyle} ${isActive ? activeLink : ""}`
+                    }
+                  >
+                    <HiOutlineCube className="text-base" />
+                    <span>Customer</span>
+                  </NavLink>
                 </li>
               </ul>
-            </div>
-          )}
-        </li>
+            )}
+          </li>
 
-        <li className="hover:bg-gray-700 p-2 rounded cursor-pointer">
-          Settings
+          {/* Procurement Dropdown */}
+          <li>
+            <div
+              className="flex items-center justify-between px-4 py-3 hover:bg-gray-800 cursor-pointer"
+              onClick={() => setShowProcurement(!showProcurement)}
+            >
+              <div className="flex items-center gap-3">
+                <HiOutlineClipboardDocument className="text-lg" />
+                <span>Procurement</span>
+              </div>
+              {showProcurement ? <LuChevronUp /> : <LuChevronDown />}
+            </div>
+
+            {showProcurement && (
+              <ul className="pl-10 pr-4 pb-2 pt-1 space-y-2 text-sm text-gray-400">
+                <li>
+                  <NavLink
+                    to="/requisition"
+                    className={({ isActive }) =>
+                      `${linkStyle} ${isActive ? activeLink : ""}`
+                    }
+                  >
+                    <HiOutlineDocumentText className="text-base" />
+                    <span>Purchase Requisition</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/po"
+                    className={({ isActive }) =>
+                      `${linkStyle} ${isActive ? activeLink : ""}`
+                    }
+                  >
+                    <HiOutlineCube className="text-base" />
+                    <span>Purchase Order</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/grn"
+                    className={({ isActive }) =>
+                      `${linkStyle} ${isActive ? activeLink : ""}`
+                    }
+                  >
+                    <HiOutlineBuildingStorefront className="text-base" />
+                    <span>GRN</span>
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Settings */}
+          <li className="px-4 py-3 hover:bg-gray-800">
+            <NavLink to="/settings" className={({ isActive }) =>
+              `${linkStyle} ${isActive ? activeLink : "text-gray-400"}`
+            }>
+              <HiOutlineCog className="text-lg" />
+              <span>Settings</span>
+            </NavLink>
+          </li>
+        </div>
+
+        {/* 🔒 Logout Button at Bottom */}
+        <li className="px-4 py-3 border-t border-gray-800 hover:bg-red-700 text-sm text-gray-300 hover:text-white cursor-pointer" onClick={handleLogout}>
+          Logout
         </li>
       </ul>
-
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white bg-red-500 px-2 py-1 rounded"
-      >
-        Close
-      </button>
     </div>
   );
 };

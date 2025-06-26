@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import SupplierForm from "./SupplierForm";
-import Try from "./Try";
-
-function SupplierMaster() {
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import * as XLSX from "xlsx";
-import AppBar from "./AppBar";
 
 export default function SupplierMaster() {
   const { register, handleSubmit, reset } = useForm();
@@ -46,7 +41,6 @@ export default function SupplierMaster() {
 
   return (
     <div>
-      <AppBar />
       <div className=" min-h-50 p-5 flex flex-col justify-between items-center">
         <h2 className="text-2xl font-bold justify-start">
           Supplier Report
@@ -154,12 +148,13 @@ export default function SupplierMaster() {
             <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
               <h3 className="text-lg font-bold mb-4">Add Supplier</h3>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-               <fieldset>
-                <input
-                  {...register("name", { required: true })}
-                  placeholder="Supplier Name"
-                  className="border p-2 w-full rounded"
-                /></fieldset>
+                <fieldset>
+                  <input
+                    {...register("name", { required: true })}
+                    placeholder="Supplier Name"
+                    className="border p-2 w-full rounded"
+                  />
+                </fieldset>
                 <input
                   {...register("gst", { required: true })}
                   placeholder="GST Number"
