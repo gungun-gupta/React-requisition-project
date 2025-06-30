@@ -27,15 +27,15 @@ const PurchaseTable = ({ data, onEdit, onDelete }) => {
                 <td className="px-4 py-2">
                   {item.RequisitionNo || `REQ-${item.Sno}`}
                 </td>
-                <td className="px-4 py-2">{item.Document_Type}</td>
-                <td className="px-4 py-2">{item.Document_subtype}</td>
-                <td className="px-4 py-2">{item.CreatedBy}</td>
-                <td className="px-4 py-2">{item.CreatedOn}</td>
-                <td className="px-4 py-2">{item.MaterialCode}</td>
-                <td className="px-4 py-2">{item.Description}</td>
-                <td className="px-4 py-2">{item.Unit}</td>
-                <td className="px-4 py-2">{item.Quantity}</td>
-                <td className="px-4 py-2">{item.DeliveryDate}</td>
+                <td className="px-4 py-2">{item.documentType}</td>
+                <td className="px-4 py-2">{item.documentSubtype}</td>
+                <td className="px-4 py-2">{item.createdBy}</td>
+                <td className="px-4 py-2">{item.createdOn}</td>
+                <td className="px-4 py-2">{item.mtCode}</td>
+                <td className="px-4 py-2">{item.mtDesc1}</td>
+                <td className="px-4 py-2">{item.uom}</td>
+                <td className="px-4 py-2">{item.prquantity}</td>
+                <td className="px-4 py-2">{item.deliveryDate}</td>
                 <td className="px-4 py-2 flex space-x-2">
                   <button
                     onClick={() => onEdit(item)}
