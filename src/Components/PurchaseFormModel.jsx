@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MaterialService from "../services/material.service";
+import MaterialService from "../services/materialmaster.service";
 
 const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
   const [form, setForm] = useState({
@@ -142,11 +142,11 @@ const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
                 if (selectedMaterial) {
                   setForm((prev) => ({
                     ...prev,
-                    mtCode: selectedMaterial.documentNo, 
-                    mtDesc1: selectedMaterial.mtDesc1, 
+                    mtCode: selectedMaterial.documentNo,
+                    mtDesc1: selectedMaterial.mtDesc1,
                     uom: selectedMaterial.uom,
                     documentType: selectedMaterial.documentType,
-                    documentSubtype: selectedMaterial.documentSubtype || "", 
+                    documentSubtype: selectedMaterial.documentSubtype || "",
                   }));
                 } else {
                   setForm((prev) => ({

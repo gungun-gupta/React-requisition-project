@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MaterialRow from "./MaterialRow";
-import MaterialService from "../services/material.service";
+import MaterialmasterService from "../services/materialmaster.service";
 
 const MaterialTable = () => {
   const [materials, setMaterials] = useState([]);
@@ -15,7 +15,7 @@ const MaterialTable = () => {
     if (!userCookie) {
       navigate("/"); // Not logged in
     } else {
-      MaterialService.getMaterials()
+      MaterialmasterService.getMaterials()
         .then((data) => {
           if (data) {
             setMaterials(data);

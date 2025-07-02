@@ -22,8 +22,8 @@ const getMaterials = () => {
     });
 };
 
-const MaterialService = {
+const MaterialmasterService = {
   getMaterials,
 };
 
-export default MaterialService;
+export default MaterialmasterService;
