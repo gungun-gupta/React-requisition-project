@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import MaterialService from "../services/material.service";
 
 const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
   const [form, setForm] = useState({
@@ -18,6 +19,15 @@ const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
 
   const [tempItems, setTempItems] = useState([]);
   const [errors, setErrors] = useState({});
+  const [materialList, setMaterialList] = useState([]);
+
+  useEffect(() => {
+    MaterialService.getMaterials()
+      .then((data) => {
+        setMaterialList(data);
+      })
+      .catch((err) => console.error("Failed to fetch materials:", err));
+  }, []);
 
   useEffect(() => {
     if (mode === "edit" && initialData) {
@@ -120,13 +130,44 @@ const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
 
           <div>
             <label>Material Code</label>
-            <input
-              type="text"
+            <select
               name="mtCode"
               value={form.mtCode}
-              onChange={handleChange}
+              onChange={(e) => {
+                const selectedCode = e.target.value;
+                const selectedMaterial = materialList.find(
+                  (item) => item.documentNo === selectedCode
+                );
+
+                if (selectedMaterial) {
+                  setForm((prev) => ({
+                    ...prev,
+                    mtCode: selectedMaterial.documentNo, 
+                    mtDesc1: selectedMaterial.mtDesc1, 
+                    uom: selectedMaterial.uom,
+                    documentType: selectedMaterial.documentType,
+                    documentSubtype: selectedMaterial.documentSubtype || "", 
+                  }));
+                } else {
+                  setForm((prev) => ({
+                    ...prev,
+                    mtCode: "",
+                    mtDesc1: "",
+                    uom: "",
+                    documentType: "",
+                    documentSubtype: "",
+                  }));
+                }
+              }}
               className="w-full border px-3 py-2 rounded"
-            />
+            >
+              <option value="">Select Material Code</option>
+              {materialList.map((material) => (
+                <option key={material.id} value={material.documentNo}>
+                  {material.documentNo}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -136,6 +177,7 @@ const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
               name="mtDesc1"
               value={form.mtDesc1}
               onChange={handleChange}
+              readOnly
               className="w-full border px-3 py-2 rounded"
             />
           </div>
@@ -147,6 +189,7 @@ const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
               name="uom"
               value={form.uom}
               onChange={handleChange}
+              readOnly
               className="w-full border px-3 py-2 rounded"
             />
           </div>
@@ -189,6 +232,7 @@ const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
               name="documentType"
               value={form.documentType}
               onChange={handleChange}
+              readOnly
               className="w-full border px-3 py-2 rounded"
             />
           </div>
@@ -199,6 +243,7 @@ const PurchaseFormModal = ({ isOpen, onClose, onSave, mode, initialData }) => {
               type="text"
               name="documentSubtype"
               value={form.documentSubtype}
+              readOnly
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
             />

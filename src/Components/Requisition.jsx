@@ -49,9 +49,6 @@ const Requisition = () => {
   //   },
   // ]);
 
-  // Keep full list for filtering
-  const [allPurchases, setAllPurchases] = useState(purchaseList);
-
   // Add button
   const handleAddClick = () => {
     setFormMode("add");
@@ -82,7 +79,7 @@ const Requisition = () => {
         .catch((err) => console.error("Error creating requisition:", err));
     } else if (formMode === "edit" && items.length === 1) {
       const updatedItem = items[0];
-      RequisitionService.updateRequisition(updatedItem.documentNo , updatedItem)
+      RequisitionService.updateRequisition(updatedItem.documentNo, updatedItem)
         .then(() => {
           console.log("Requisition updated");
           const updatedList = purchaseList.map((item) =>
@@ -116,34 +113,37 @@ const Requisition = () => {
     }
   };
 
+  // Keep full list for filtering
+  const [allPurchases, setAllPurchases] = useState(purchaseList);
   // Filter
   const handleFilter = (fromDate, toDate) => {
     const filtered = allPurchases.filter((item) => {
-      const itemDate = new Date(item.CreatedOn);
-      const from = fromDate ? new Date(fromDate) : null;
-      const to = toDate ? new Date(toDate) : null;
+      const itemDate = new Date(item.createdOn);
+      // Set time to start and end of day for accurate filtering
+      const from = fromDate ? new Date(`${fromDate}T00:00:00`) : null;
+      const to = toDate ? new Date(`${toDate}T23:59:59`) : null;
+
       return (!from || itemDate >= from) && (!to || itemDate <= to);
     });
+
     setPurchaseList(filtered);
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-1 overflow-y-auto p-4">
-        <Card onAdd={handleAddClick} onFilter={handleFilter} />
-        <PurchaseTable
-          data={purchaseList}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-        <PurchaseFormModal
-          isOpen={showForm}
-          onClose={() => setShowForm(false)}
-          onSave={handleSave}
-          mode={formMode}
-          initialData={editData}
-        />
-      </div>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <Card onAdd={handleAddClick} onFilter={handleFilter} />
+      <PurchaseTable
+        data={purchaseList}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+      <PurchaseFormModal
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        onSave={handleSave}
+        mode={formMode}
+        initialData={editData}
+      />
     </div>
   );
 };

@@ -80,6 +80,17 @@ const Sidebar = ({ isOpen }) => {
                     <span>Customer</span>
                   </NavLink>
                 </li>
+                 <li>
+                  <NavLink
+                    to="/MaterialMaster"
+                    className={({ isActive }) =>
+                      `${linkStyle} ${isActive ? activeLink : ""}`
+                    }
+                  >
+                    <HiOutlineCube className="text-base" />
+                    <span>Material Master</span>
+                  </NavLink>
+                </li>
               </ul>
             )}
           </li>
