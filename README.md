@@ -1,12 +1,67 @@
-# React + Vite
+# 📦 Inventory & Requisition Management System (IRMS)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack inventory and requisition management dashboard designed to help organizations track material requests, manage department-wise requisitions, and monitor stock values and quantities with clean, responsive UI and robust filtering.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 📊 **Dashboard Summary Cards** – Total Requisitions, Quantities, Stock Value, Approval Status, Top Material, and more
+- 📅 **Date-wise Filtering** – Smart range-based filtering of requisitions using `fromDate` and `toDate`
+- 📁 **CRUD Operations** – Create, Read, Update, and Delete material requisitions
+- ✅ **Status Tracking** – View Approved, Pending, and Rejected requisitions
+- 🏢 **Departmental Overview** – Track requisitions department-wise
+- 🔍 **Top Material Identification** – Discover most frequently requested materials
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧱 Tech Stack
+
+### 🌐 Frontend
+- **React.js + Vite**
+- **Tailwind CSS**
+- **React Icons**
+- **JavaScript (ES6)**
+
+### 💾 Backend
+- **REST API** for data handling
+
+### 🧪 Dev Tools
+- **Postman** – API testing
+- **VS Code** – Editor
+- **Git + GitHub** – Version control
+
+---
+
+## 🖥️ Screenshots
+
+> (Insert your screenshots here)
+
+![Dashboard Summary](./screenshots/dashboard.png)
+![Requisition Filter](./screenshots/filter.png)
+
+---
+
+## Runing the project 
+# Clone the repository
+git clone https://github.com/yourusername/irms-dashboard.git
+cd irms-dashboard
+
+# Install dependencies
+npm install
+
+# Start the app
+npm start dev
+
+---
+
+## Future Enhancements
+🔐 Role-based login (Admin/User)
+
+📦 Material Category Management
+
+📈 Graphs and charts using Recharts or Chart.js
+
+📤 Export to Excel/PDF
+
+
