@@ -35,8 +35,7 @@ A full-stack inventory and requisition management dashboard designed to help org
 
 ## 🖥️ Screenshots
 
-> (Insert your screenshots here)
-
+>(we'll add later)
 ![Dashboard Summary](./screenshots/dashboard.png)
 ![Requisition Filter](./screenshots/filter.png)
 
@@ -44,7 +43,7 @@ A full-stack inventory and requisition management dashboard designed to help org
 
 ## Runing the project 
 # Clone the repository
-git clone https://github.com/yourusername/irms-dashboard.git
+git clone https://https://github.com/gungun-gupta/React-requisition-project
 cd irms-dashboard
 
 # Install dependencies
